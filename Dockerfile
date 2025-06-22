@@ -1,9 +1,8 @@
-# Use the official PHP image
+# Use PHP with required extensions
 FROM php:8.2-fpm
 
-# Install system dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    build-essential \
     libpng-dev \
     libjpeg-dev \
     libonig-dev \
@@ -16,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-dev
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd pdo_sqlite
+RUN docker-php-ext-install pdo pdo_sqlite mbstring exif pcntl bcmath gd
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -24,17 +23,20 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy existing application directory contents
+# Copy project files
 COPY . /var/www
 
-# Install dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
+
+# Make sure SQLite file exists
+RUN mkdir -p /data && touch /data/database.sqlite && chmod -R 777 /data
 
 # Permissions
 RUN chown -R www-data:www-data /var/www
 
-# Expose port
-EXPOSE 8000
+# Expose the correct port Render expects
+EXPOSE 10000
 
-# Start command
-CMD php artisan serve --host=0.0.0.0 --port=8000
+# Laravel run command
+CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=10000
