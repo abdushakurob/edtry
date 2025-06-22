@@ -1,0 +1,103 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Theme colors for the app */
+    --color-primary: #FEFFD2;
+    --color-secondary: #FFEEA9;
+    --color-accent: #FFBF78;
+    --color-highlight: #FF7D29;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+}
+
+/* Color utility classes */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.text-highlight {
+  color: var(--color-highlight);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+
+/* .bg-accent {
+  background-color: var(--color-accent);
+} */
+
+.bg-highlight {
+  background-color: var(--color-highlight);
+}
+
+/* Additional utility classes */
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.text-green-600 {
+  color: #059669;
+}
+
+.text-purple-600 {
+  color: #7c3aed;
+}
+
+.bg-blue-100 {
+  background-color: #dbeafe;
+}
+
+.bg-green-100 {
+  background-color: #d1fae5;
+}
+
+.bg-purple-100 {
+  background-color: #ede9fe;
+}
+
+/* Element styling */
+h1{
+    @apply text-3xl font-bold text-center text-accent mb-2
+}
+
+input, textarea, select {
+    @apply w-full px-3 py-2 border border-accent rounded focus:outline-none;
+}
+
+.button {
+    @apply bg-accent text-white font-semibold hover:bg-secondary transition
+}
+
+a {
+   @apply text-accent
+}
+
+p {
+    @apply text-gray-600;
+}
+
+label {
+    @apply text-gray-700 font-semibold
+}

@@ -1,0 +1,235 @@
+# Edtry: AI-Enhanced Learning Platform
+
+Edtry is an intelligent learning platform that helps teachers create courses and enables students to learn with AI-powered assistance. The app provides educators and learners with integrated AI capabilities for contextual question answering.
+
+<!-- ![Edtry Platform](https://example.com/edtry-screenshot.png) -->
+
+## About the App
+
+Edtry is a learning application that helps students ask questions about their lessons and receive intelligent responses based on the lesson content. The platform uses Retrieval-Augmented Generation (RAG) to ensure that AI responses are grounded in the actual course materials rather than generic information.
+
+Built with:
+- **Laravel 12** for the backend architecture
+- **Vue.js 3** with Composition API for the frontend interface
+- **FastAPI** Python microservice for text chunking
+- **Qdrant** vector database for storing embeddings
+- **TogetherAI API** for access to embedding and LLM models
+
+## Features
+
+### For Teachers
+- Create and manage courses with structured lessons
+- Write the lesson text and the title
+- Edit and update course materials
+
+### For Students
+- Browse and enroll in available courses
+- Track learning progress with completion indicators
+- Ask questions about lesson content and receive AI-powered answers
+- Get intelligent next-lesson suggestions based on queries
+
+### AI Integration
+- Context-aware question answering using lesson content
+- Automatic chunking and embedding of lesson materials
+- Semantic search for retrieving relevant information
+- Next topic suggestions based on student questions
+
+## Getting Started
+
+### Prerequisites
+
+- PHP 8.1+
+- Composer
+- Node.js and npm
+- SQLite, MySQL, or PostgreSQL database
+- TogetherAI API key for access to embedding and LLM models
+- Qdrant instance (cloud or self-hosted)
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/abdushakurob/edtry.git
+cd edtry
+```
+
+2. Install PHP dependencies
+```bash
+composer install
+```
+
+3. Install JavaScript dependencies
+```bash
+yarn install
+```
+
+4. Configure environment variables
+```bash
+cp .env.example .env
+# Edit .env file with your database credentials and API keys
+```
+
+5. Run database migrations
+```bash
+php artisan migrate
+```
+
+6. Build frontend assets
+```bash
+yarn run dev
+```
+
+7. Start the development server
+```bash
+php artisan serve
+```
+
+8. Access the application at `http://localhost:8000`
+
+### Environment Variables
+
+The following environment variables are required for AI functionality:
+```
+TOGETHER_API_KEY=your_together_ai_api_key
+TOGETHER_API_URL=https://api.together.xyz/v1
+QDRANT_API_KEY=your_qdrant_api_key
+QDRANT_HOST=your_qdrant_instance_url
+QDRANT_COLLECTION=lesson
+CHUNK_URL=your_chunking_service_url
+EDTRY_INTERNAL_API_KEY=your_internal_api_key
+```
+
+## Project Architecture
+
+### Folder Structure
+
+```
+edtry/
+├── app/                   # Laravel application code
+│   ├── Http/
+│   │   ├── Controllers/   # API and web controllers
+│   │   └── Middleware/    # Request middleware (auth, roles)
+│   └── Models/            # Eloquent data models
+├── database/
+│   ├── migrations/        # Database schema definitions
+│   └── factories/         # Model factories for testing
+├── resources/
+│   ├── js/
+│   │   ├── Components/    # Reusable Vue components
+│   │   └── Pages/         # Vue pages for each route
+│   ├── views/             # Blade templates
+│   │   ├── auth/          # Authentication views
+│   │   ├── student/       # Student-specific views
+│   │   └── teacher/       # Teacher-specific views
+│   └── css/               # Stylesheet assets
+└── routes/
+    └── web.php            # Application routes
+```
+
+### How the Frontend Works
+
+The frontend is built using Vue.js 3 with Composition API and integrated within the Laravel Blade environment. It is a hybrid setup where Vue components are mounted into specific Blade views:
+
+- All Vue-related code is located in the `/resources/js` folder of the Laravel app.
+- This is split into two main folders:
+  - `components/`: Contains reusable UI components like buttons, modals, chat input etc.
+  - `pages/`: Contains full page views, such as Dashboard, Course Views, Lesson Pages, and so on.
+- Vue pages are embedded into Blade templates and mounted via specific `div` containers with `id` selectors.
+- Routing is handled by Laravel's backend router (`web.php`), so each route serves a specific Blade file which then mounts a Vue component. No Vue Router is used.
+
+Example: The `/` route loads `home.blade.php`, which in turn loads and mounts the `Home.vue` component.
+
+### Role-Based Access
+- After login, Laravel determines the user's role (Teacher or Student) and serves the appropriate dashboard.
+- Backend routes automatically conditionally render pages based on user roles using the `CheckRole` middleware.
+
+### Axios Integration
+- All API calls (course creation, lesson upload, ask-AI) are handled using Axios.
+
+## API Structure
+
+### Authentication Endpoints
+- `POST /login`: Login with credentials
+- `POST /signup`: Register new account
+- `POST /logout`: End user session
+- `GET /me`: Get current user information
+
+### Teacher API Routes
+- `POST /api/teacher/courses`: Create a new course with lessons
+- `GET /api/teacher/courses`: Get all teacher-created courses
+- `PUT /api/teacher/courses/{id}`: Update course details
+- `GET /api/teacher/courses/{id}`: Get course details
+- `DELETE /api/teacher/courses/{id}`: Delete a course
+- `GET /api/teacher/courses/{id}/students`: List enrolled students
+
+### Student API Routes
+- `GET /api/student/courses`: Get all enrolled courses
+- `GET /api/student/courses/{id}`: Get course details (including lessons)
+- `POST /api/student/courses/{id}/enroll`: Enroll in a course
+- `GET /api/student/available-courses`: Get all available courses
+- `GET /api/student/lessons/{id}`: Get lesson details
+- `POST /api/student/lessons/{id}/complete`: Mark a lesson as completed
+
+### AI API Routes
+- `POST /api/chunked`: Process chunked lessons for vector database
+- `POST /ask/ai`: Submit a question for AI-powered response
+
+## AI System Architecture
+
+Edtry uses a Retrieval-Augmented Generation (RAG) system to allow students to ask questions about specific lessons and receive relevant AI-generated answers.
+
+### AI Processing Flow
+
+#### 1. Content Processing
+
+When a teacher creates or updates lesson content:
+
+- The lesson text is sent to a FastAPI Python microservice
+- The service uses RecursiveChunker (from Chonkie) to split the lesson into semantic chunks
+- Chunks respect sentence boundaries and maintain context while keeping size around 400 tokens
+- Tokenization is handled using BAAI/bge-base-en-v1.5 for consistency with the embedding model
+- The chunks are returned to Laravel with metadata like chunk_index, course_id, lesson_id and title
+
+Example chunking response:
+```json
+{
+  "title": "Introduction to Photosynthesis",
+  "text": "...full lesson text...",
+  "course_id": 3,
+  "lesson_id": 12,
+  "type": "updated",
+  "chunks": [
+    { "text": "Photosynthesis is the process by which...", "chunk_index": 0 },
+    { "text": "This process occurs in the chloroplasts...", "chunk_index": 1 }
+  ]
+}
+```
+
+#### 2. Vectorization & Storage
+
+- Laravel receives the chunked content and forwards it to TogetherAI's embedding API
+- The API converts each text chunk into a vector embedding (numerical representation) using models hosted on TogetherAI
+- Embeddings are stored in Qdrant vector database along with metadata
+- The metadata enables filtering by course, lesson, and other attributes during retrieval
+
+#### 3. Question Processing
+
+When a student asks a question:
+
+- The question is converted into an embedding vector using TogetherAI
+- Semantic search is performed in Qdrant to find the most relevant chunks
+- Results are filtered by course_id and lesson_id to maintain context
+- For suggested next lessons, a separate query finds relevant content outside the current lesson
+- A prompt template combines the base prompt, student question, retrieved chunks, and suggested lessons
+- This prompt is sent to an LLM model hosted on the TogetherAI platform for response generation
+- The response is sent to the student chat
+
+#### 4. Response Delivery
+
+- Answers are grounded in the actual lesson content, improving accuracy
+- Next lesson suggestions are included when relevant to the question
+- Responses clearly indicate when information is not available in the current lesson
+
+This RAG architecture ensures that AI responses stay focused on actual course content rather than generic information, creating a personalized learning experience closely tied to the curriculum.
+
+
