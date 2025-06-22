@@ -6,6 +6,16 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Api\LessonChunkController;
 
 use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
+
+Route::get('/debug-log', function () {
+    $logPath = storage_path('logs/laravel.log');
+    if (!File::exists($logPath)) return 'No logs yet.';
+    return nl2br(e(File::get($logPath)));
+});
+
 //public routes
 Route::get('/', function () {
     return view('home');
