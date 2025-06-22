@@ -184,7 +184,7 @@ Edtry uses a Retrieval-Augmented Generation (RAG) system to allow students to as
 
 When a teacher creates or updates lesson content:
 
-- The lesson text is sent to a FastAPI Python microservice
+- The lesson text is sent to a [FastAPI Python microservice](https://github.com/abdushakurob/edtry-chunker)
 - The service uses RecursiveChunker (from Chonkie) to split the lesson into semantic chunks
 - Chunks respect sentence boundaries and maintain context while keeping size around 400 tokens
 - Tokenization is handled using BAAI/bge-base-en-v1.5 for consistency with the embedding model
