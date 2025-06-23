@@ -1,5 +1,8 @@
 <template>
   <div class="min-h-screen font-sans">
+    <!-- Navbar -->
+    <Navbar />
+    
     <!-- Hero Section -->
     <header class="bg-[#FEFFD2] py-16 md:py-24">
       <div class="container mx-auto px-6 md:px-12">
@@ -15,9 +18,11 @@
               Students can ask anything. Edtry answers — instantly, accurately, and only from your course.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <button class="px-8 py-3 bg-[#FF7D29] text-white font-medium rounded-md hover:bg-[#e87224] transition">
-                Get Started
-              </button>
+              <a href="/signup">
+                <button class="px-8 py-3 bg-[#FF7D29] text-white font-medium rounded-md hover:bg-[#e87224] transition">
+                  Get Started
+                </button>
+              </a>
               <button class="px-8 py-3 bg-white border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-50 transition">
                 Watch Demo
               </button>
@@ -126,9 +131,11 @@
         <p class="text-xl text-white opacity-90 mb-8 max-w-2xl mx-auto">
           Start creating courses that remember everything you've taught.
         </p>
-        <button class="px-8 py-3 bg-white text-[#FF7D29] font-medium rounded-md hover:bg-gray-100 transition">
-          Get Started Today
-        </button>
+        <a href="/signup">
+          <button class="px-8 py-3 bg-white text-[#FF7D29] font-medium rounded-md hover:bg-gray-100 transition">
+            Get Started Today
+          </button>
+        </a>
       </div>
     </section>
 
@@ -173,5 +180,5 @@
 </template>
 
 <script setup>
-// You can add more interactive functionality here if needed
+import Navbar from '../Components/Navbar.vue';
 </script>

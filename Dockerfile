@@ -44,7 +44,7 @@ WORKDIR /var/www
 COPY . /var/www
 
 # Copy built frontend assets from the node stage into the Laravel public directory
-COPY --from=node /app/resources/dist /var/www/public/build
+COPY --from=node /app/public/build /var/www/public/build
 
 # Install PHP dependencies (production-ready)
 RUN composer install --no-dev --optimize-autoloader
