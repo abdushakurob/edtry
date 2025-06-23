@@ -1,7 +1,24 @@
-# Use PHP with required extensions
+# ---------- Node Stage: Build Frontend Assets ----------
+FROM node:18 AS node
+
+WORKDIR /app
+
+# Copy only the necessary files for dependency installation
+COPY package.json yarn.lock vite.config.* /app/
+
+# Install frontend dependencies using Yarn
+RUN yarn install --frozen-lockfile
+
+# Copy frontend source files
+COPY resources /app/resources
+
+# Build frontend assets (assumes Vite)
+RUN yarn build
+
+# ---------- PHP Stage: Backend Setup ----------
 FROM php:8.2-fpm
 
-# Install dependencies
+# Install PHP dependencies and required libraries
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -20,23 +37,26 @@ RUN docker-php-ext-install pdo pdo_sqlite mbstring exif pcntl bcmath gd
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# Set the working directory
 WORKDIR /var/www
 
-# Copy project files
+# Copy backend files (Laravel app)
 COPY . /var/www
 
-# Install PHP dependencies
+# Copy built frontend assets from the node stage into the Laravel public directory
+COPY --from=node /app/resources/dist /var/www/public/build
+
+# Install PHP dependencies (production-ready)
 RUN composer install --no-dev --optimize-autoloader
 
-# Make sure SQLite file exists
+# Ensure SQLite DB file exists (optional)
 RUN mkdir -p /data && touch /data/database.sqlite && chmod -R 777 /data
 
-# Permissions
+# Fix permissions for Laravel
 RUN chown -R www-data:www-data /var/www
 
-# Expose the correct port Render expects
+# Expose the port expected by Render or other platforms
 EXPOSE 10000
 
-# Laravel run command
+# Start the Laravel app
 CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=10000

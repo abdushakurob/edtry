@@ -24,3 +24,4 @@ Thumbs.db
 .github
 .log.md
 api.md
+/public/build
