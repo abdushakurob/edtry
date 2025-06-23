@@ -104,6 +104,14 @@ EDTRY_INTERNAL_API_KEY=your_internal_api_key
 
 Edtry uses several AI components to provide its intelligent learning experience:
 
+#### Text Chunking Service
+- **Service**: Custom [FastAPI microservice](github.com/abdushakurob/edtry-chunker)
+- **Purpose**: Breaks down lesson content into manageable chunks for embedding
+- **Process**:
+  1. Receives lesson text from the Laravel backend
+  2. Processes text into semantic chunks
+  3. Returns chunks for embedding and storage
+
 #### Embedding Model
 - **Model**: BAAI/bge-base-en-v1.5 (via Together AI)
 - **Purpose**: Converts text chunks into vector embeddings for semantic search
@@ -127,14 +135,6 @@ Edtry uses several AI components to provide its intelligent learning experience:
   - Fast similarity search for finding relevant lesson content
   - Filtering by course_id and lesson_id for targeted responses
   - Support for complex queries to find related content across courses
-
-#### Text Chunking Service
-- **Service**: Custom FastAPI microservice
-- **Purpose**: Breaks down lesson content into manageable chunks for embedding
-- **Process**:
-  1. Receives lesson text from the Laravel backend
-  2. Processes text into semantic chunks
-  3. Returns chunks for embedding and storage
 
 ### Getting API Keys
 
