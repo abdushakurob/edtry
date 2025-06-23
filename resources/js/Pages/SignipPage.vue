@@ -59,10 +59,18 @@
           />
         </div>
         <button
-          class="w-full bg-accent text-white font-semibold py-2 px-4 rounded hover:bg-secondary transition"
+          class="w-full bg-accent text-white font-semibold py-2 px-4 rounded hover:bg-secondary transition relative"
           type="submit"
+          :disabled="isLoading"
         >
-          Create Account
+          <span v-if="!isLoading">Create Account</span>
+          <span v-else class="flex items-center justify-center">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Creating Account...
+          </span>
         </button>
       </form>
       <div class="mt-6 space-y-2 text-center text-sm text-gray-600">
@@ -85,6 +93,8 @@ const role = ref('')
 const password = ref('')
 const password_confirm = ref('')
 
+const isLoading = ref(false)
+
 function handleSignup() {
   if (!name.value || !email.value || !role.value || !password.value || !password_confirm.value) {
     alert('Please fill in all fields.')
@@ -94,6 +104,7 @@ function handleSignup() {
     alert('Passwords do not match.')
     return
   }
+  isLoading.value = true
   axios.post('/signup', {
     name: name.value,
     email: email.value,
@@ -106,13 +117,16 @@ function handleSignup() {
   }).catch(error => {
     console.error('Signup error:', error)
     alert(`An error occurred during signup. Please try again. ${error.response?.data?.message}`)
+  }).finally(() => {
+    isLoading.value = false
   })
 }
 </script>
 
-<style>
+<style scoped>
 .label {
-    @reference block mb-2
+    display: block;
+    margin-bottom: 0.5rem;
 }
 </style>
 

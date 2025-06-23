@@ -89,6 +89,7 @@ php artisan serve
 ### Environment Variables
 
 The following environment variables are required for AI functionality:
+
 ```
 TOGETHER_API_KEY=your_together_ai_api_key
 TOGETHER_API_URL=https://api.together.xyz/v1
@@ -98,6 +99,81 @@ QDRANT_COLLECTION=lesson
 CHUNK_URL=your_chunking_service_url
 EDTRY_INTERNAL_API_KEY=your_internal_api_key
 ```
+
+### AI Models and Integration
+
+Edtry uses several AI components to provide its intelligent learning experience:
+
+#### Embedding Model
+- **Model**: BAAI/bge-base-en-v1.5 (via Together AI)
+- **Purpose**: Converts text chunks into vector embeddings for semantic search
+- **Use Cases**: 
+  - Converting lesson content into searchable vectors
+  - Converting student questions into vectors for similarity matching
+
+#### LLM (Large Language Model)
+- **Model**: deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free (via Together AI)
+- **Purpose**: Generates contextual responses to student questions
+- **Features**:
+  - Responses are grounded in the course material
+  - Conversational teaching style
+  - Suggests relevant next lessons when appropriate
+
+#### Vector Database
+- **Service**: Qdrant
+- **Collection**: 'lesson' (configured via QDRANT_COLLECTION)
+- **Purpose**: Stores and retrieves lesson content embeddings
+- **Features**:
+  - Fast similarity search for finding relevant lesson content
+  - Filtering by course_id and lesson_id for targeted responses
+  - Support for complex queries to find related content across courses
+
+#### Text Chunking Service
+- **Service**: Custom FastAPI microservice
+- **Purpose**: Breaks down lesson content into manageable chunks for embedding
+- **Process**:
+  1. Receives lesson text from the Laravel backend
+  2. Processes text into semantic chunks
+  3. Returns chunks for embedding and storage
+
+### Getting API Keys
+
+To fully utilize Edtry's AI features, you'll need to obtain the following API keys:
+
+#### Together AI
+1. Create an account at [Together AI](https://www.together.ai/)
+2. Navigate to your account settings to generate an API key
+3. Add this key to your `.env` file as `TOGETHER_API_KEY`
+
+#### Qdrant Vector Database
+1. Either:
+   - Set up a [Qdrant Cloud](https://qdrant.tech/) account (recommended for easy setup)
+   - Self-host Qdrant using Docker or native installation
+2. Create a new collection named 'lesson' (or your preferred name)
+3. Set up API keys in your Qdrant instance
+4. Add the host URL and API key to your `.env` file
+
+#### Internal API Key and FastAPI Chunking Service
+1. Generate a secure random string to use as your internal API key
+2. Add this key to your `.env` file as `EDTRY_INTERNAL_API_KEY`
+3. This key is used to authenticate API requests between the Laravel backend and the FastAPI chunking service
+4. Set up the FastAPI chunking service and add its URL to your `.env` file as `CHUNK_URL`
+
+##### Example API call to the FastAPI chunking service:
+```bash
+curl -X POST ${CHUNK_URL}/chunk \
+  -H "Content-Type: application/json" \
+  -H "X-Internal-API-Key: your_api_key_here" \
+  -d '{
+    "course_id": 123,
+    "lesson_id": 456,
+    "lesson_title": "Introduction to Machine Learning",
+    "lesson_content": "Machine learning is a branch of artificial intelligence...",
+    "type": "created"
+  }'
+```
+
+The FastAPI chunking service processes lesson content into semantic chunks and returns them to the Laravel backend. The same internal API key is used both for sending requests to the FastAPI service and for authenticating incoming requests from the FastAPI service to the Laravel backend.
 
 ## Project Architecture
 

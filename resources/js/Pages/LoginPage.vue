@@ -29,11 +29,19 @@
                      />
             </div>
             <button
-                class="w-full py-2 button px-4 rounded"
+                class="w-full py-2 button px-4 rounded relative"
                 type="submit"
                 @onsubmit="handleLogin"
+                :disabled="isLoading"
             >
-                Login
+                <span v-if="!isLoading">Login</span>
+                <span v-else class="flex items-center justify-center">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Loading...
+                </span>
             </button>
         </form>
         <div class="mt-6 space-y-2 text-center text-sm text-gray-600">
@@ -57,8 +65,10 @@ import axios from 'axios';
 
 const email = ref('');
 const password = ref('');
+const isLoading = ref(false);
 
 function handleLogin() {
+    isLoading.value = true;
     axios.post('/login', {
         email: email.value,
         password: password.value
@@ -69,13 +79,17 @@ function handleLogin() {
     .catch(error => {
         console.error(error);
         alert('Login failed. Please check your credentials and try again.');
+    })
+    .finally(() => {
+        isLoading.value = false;
     });
 }
 
 </script>
 
-<style>
+<style scoped>
 .label {
-    @reference block mb-2
+    display: block;
+    margin-bottom: 0.5rem;
 }
 </style>

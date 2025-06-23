@@ -64,13 +64,19 @@ const props = defineProps({
   }
 })
 
+const isLoggingOut = ref(false)
+
 const logout = () => {
+  isLoggingOut.value = true
   axios.post('/logout')
     .then(() => {
       window.location.href = '/login'
     })
     .catch(error => {
       console.error('Logout failed:', error)
+    })
+    .finally(() => {
+      isLoggingOut.value = false
     })
 }
 </script>
