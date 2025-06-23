@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json yarn.lock vite.config.* /app/
 
 # Install frontend dependencies using Yarn
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 # Copy frontend source files
 COPY resources /app/resources
