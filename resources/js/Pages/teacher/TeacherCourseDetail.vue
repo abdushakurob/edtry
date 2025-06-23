@@ -177,7 +177,10 @@
                             <div class="flex items-center">
                               <!-- <span class="text-sm font-medium text-green-700">Published</span> -->
                             </div>
-                             <button 
+                             
+                          </div>
+
+                          <button 
                               @click="addNewLesson"
                               class="flex items-center justify-center bg-accent hover:bg-highlight text-white font-medium py-2 px-3 rounded-md text-sm transition-colors"
                             >
@@ -186,7 +189,6 @@
                               </svg>
                               Add Lesson
                             </button>
-                          </div>
                         </div>
                       </div>
                     </div>

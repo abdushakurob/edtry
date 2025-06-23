@@ -91,15 +91,7 @@
         <div class="bg-white rounded-lg shadow-md p-6">
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-semibold text-gray-800">Course Lessons</h2>
-            <button 
-              @click="addNewLesson"
-              class="text-sm flex items-center bg-accent hover:bg-highlight text-white px-3 py-1 rounded-md"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add Lesson
-            </button>
+            
           </div>
           
           <div v-if="lessons.length > 0" class="space-y-6">
@@ -172,6 +164,16 @@
             </svg>
             {{ isSaving ? 'Creating...' : 'Create Course' }}
           </button>
+
+          <button 
+              @click="addNewLesson"
+              class="text-sm flex items-center ml-5 bg-accent hover:bg-highlight text-white px-3 py-1 rounded-md"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Add Lesson
+            </button>
         </div>
       </div>
     </div>
