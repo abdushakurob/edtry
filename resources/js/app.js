@@ -1,5 +1,6 @@
 import './bootstrap';
 import Hero from './Components/Hero.vue'
+import HomePage from './Pages/HomePage.vue'
 import Login from './Pages/LoginPage.vue'
 import Signup from './Pages/SignipPage.vue'
 import StudentDashboard from './Pages/student/StudentDashboard.vue'
@@ -14,7 +15,7 @@ import TeacherCourseCreate from './Pages/teacher/TeacherCourseCreate.vue'
 import { createApp } from 'vue'
 
 const app = createApp({})
-app.component('Hero', Hero)
+app.component('Home', HomePage)
 app.component('Login', Login)
 app.component('Signup', Signup)
 app.component('StudentDashboard', StudentDashboard)

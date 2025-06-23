@@ -102,13 +102,11 @@ function handleSignup() {
     password_confirmation: password_confirm.value
   }).then(response => {
     console.log('Signup successful:', response)
-    alert('Signup successful!.')
     window.location.href = '/dashboard'
   }).catch(error => {
     console.error('Signup error:', error)
     alert(`An error occurred during signup. Please try again. ${error.response?.data?.message}`)
   })
-  alert('Signup successful!')
 }
 </script>
 

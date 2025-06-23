@@ -1,3 +1,3 @@
 <x-layouts.app>
-    <Hero />
+    <Home />
 </x-layouts.app>

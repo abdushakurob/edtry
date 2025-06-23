@@ -68,8 +68,8 @@ function handleLogin() {
     })
     .catch(error => {
         console.error(error);
+        alert('Login failed. Please check your credentials and try again.');
     });
-    console.log('Password:', password.value);
 }
 
 </script>
