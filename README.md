@@ -156,7 +156,7 @@ To fully utilize Edtry's AI features, you'll need to obtain the following API ke
 #### Internal API Key and FastAPI Chunking Service
 1. Generate a secure random string to use as your internal API key
 2. Add this key to your `.env` file as `EDTRY_INTERNAL_API_KEY`
-3. This key is used to authenticate API requests between the Laravel backend and the FastAPI chunking service
+3. This key is used to authenticate API requests between the Laravel backend and the [FastAPI chunking service](https://https://github.com/abdushakurob/edtry-chunker)
 4. Set up the FastAPI chunking service and add its URL to your `.env` file as `CHUNK_URL`
 
 ##### Example API call to the FastAPI chunking service:
