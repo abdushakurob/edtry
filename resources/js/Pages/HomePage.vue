@@ -23,7 +23,7 @@
                   Get Started
                 </button>
               </a>
-              <a href="https://youtu.be/1RccZP6vQCM">
+              <a href="https://youtu.be/0ELaglsQokw">
                 <button class="px-8 py-3 bg-white border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-50 transition">
                   Watch Demo
                 </button>
