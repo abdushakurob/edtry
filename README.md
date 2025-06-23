@@ -213,7 +213,7 @@ The frontend is built using Vue.js 3 with Composition API and integrated within 
 - Vue pages are embedded into Blade templates and mounted via specific `div` containers with `id` selectors.
 - Routing is handled by Laravel's backend router (`web.php`), so each route serves a specific Blade file which then mounts a Vue component. No Vue Router is used.
 
-Example: The `/` route loads `home.blade.php`, which in turn loads and mounts the `Home.vue` component.
+Example: The `/` route loads `home.blade.php`, which in turn loads and mounts the `HomePage.vue` component.
 
 ### Role-Based Access
 - After login, Laravel determines the user's role (Teacher or Student) and serves the appropriate dashboard.
@@ -284,7 +284,7 @@ Example chunking response:
 #### 2. Vectorization & Storage
 
 - Laravel receives the chunked content and forwards it to TogetherAI's embedding API
-- The API converts each text chunk into a vector embedding (numerical representation) using models hosted on TogetherAI
+- The API converts each text chunk into a vector embedding (numerical representation) using the embedding model (BAAI/bge-base-en-v1.5) hosted on TogetherAI
 - Embeddings are stored in Qdrant vector database along with metadata
 - The metadata enables filtering by course, lesson, and other attributes during retrieval
 
@@ -292,12 +292,12 @@ Example chunking response:
 
 When a student asks a question:
 
-- The question is converted into an embedding vector using TogetherAI
+- The question is converted into an embedding vector using thesame embedding model
 - Semantic search is performed in Qdrant to find the most relevant chunks
 - Results are filtered by course_id and lesson_id to maintain context
 - For suggested next lessons, a separate query finds relevant content outside the current lesson
 - A prompt template combines the base prompt, student question, retrieved chunks, and suggested lessons
-- This prompt is sent to an LLM model hosted on the TogetherAI platform for response generation
+- This prompt is sent to (deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free) an LLM model hosted on the TogetherAI platform for response generation
 - The response is sent to the student chat
 
 #### 4. Response Delivery
